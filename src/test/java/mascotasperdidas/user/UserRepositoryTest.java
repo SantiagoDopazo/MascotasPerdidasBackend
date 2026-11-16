@@ -16,6 +16,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @ActiveProfiles("local")
 @Transactional
 class UserRepositoryTest {
+    // El hash ya calculado se recibe como dato; BCrypt se incorporara con el registro.
     private static final String PASSWORD_HASH = "test-hash";
 
     @Autowired
@@ -31,6 +32,7 @@ class UserRepositoryTest {
         UUID id = saved.getId();
         assertThat(id).isNotNull();
 
+        // Vaciar el contexto para verificar la lectura real, no el objeto en memoria.
         entityManager.clear();
         User loaded = users.findById(id).orElseThrow();
         assertThat(loaded.getName()).isEqualTo("Santiago");
