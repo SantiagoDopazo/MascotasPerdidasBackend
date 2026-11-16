@@ -39,7 +39,10 @@ CREATE TABLE foto (
                       publicacion_id  BIGINT    	NOT NULL
                           REFERENCES publicacion(id) ON DELETE CASCADE,
                       url         	VARCHAR(500)  NOT NULL,
-                      position        INTEGER
+                      position        INTEGER,
+                      detected_type   VARCHAR(20)
+                          CHECK (detected_type IN ('DOG', 'CAT', 'NOT_DETECTED')),
+                      embedding       REAL[]
 );
 -- Indices para los filtros del listado
 CREATE INDEX idx_publicacion_usuario	ON publicacion(usuario_id);

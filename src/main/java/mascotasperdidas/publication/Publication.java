@@ -20,8 +20,11 @@ import java.time.Clock;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import mascotasperdidas.petidentification.PetIdentity;
 import mascotasperdidas.user.User;
 
 @Entity
@@ -93,7 +96,7 @@ public class Publication {
         this.location = Objects.requireNonNull(location, "publication.location.required");
         this.occurredAt = Objects.requireNonNull(occurredAt, "publication.occurrence.required");
         this.photos = new ArrayList<>(List.copyOf(photos));
-        if (this.photos.stream().distinct().count() != this.photos.size()) {
+        if (this.photos.stream().map(Photo::reference).distinct().count() != this.photos.size()) {
             throw new IllegalArgumentException("publication.photos.duplicate");
         }
     }
@@ -115,7 +118,7 @@ public class Publication {
     public void addPhoto(Photo photo) {
         state.validateEditing();
         Objects.requireNonNull(photo, "publication.photo.required");
-        if (photos.contains(photo)) {
+        if (photos.stream().anyMatch(existing -> existing.reference().equals(photo.reference()))) {
             throw new IllegalArgumentException("publication.photo.alreadyPresent");
         }
         photos.add(photo);
@@ -124,9 +127,19 @@ public class Publication {
     public void removePhoto(Photo photo) {
         state.validateEditing();
         Objects.requireNonNull(photo, "publication.photo.required");
-        if (!photos.remove(photo)) {
+        if (!photos.removeIf(existing -> existing.reference().equals(photo.reference()))) {
             throw new IllegalArgumentException("publication.photo.notFound");
         }
+    }
+
+    public void applyPhotoIdentifications(List<Photo> identifiedPhotos) {
+        state.validateEditing();
+        Map<String, PetIdentity> identifications = identifiedPhotos.stream()
+                .collect(Collectors.toMap(Photo::reference, Photo::identification));
+        photos.replaceAll(photo -> {
+            PetIdentity identification = identifications.get(photo.reference());
+            return identification == null ? photo : photo.withIdentification(identification);
+        });
     }
 
     public void close() {
