@@ -202,7 +202,7 @@ Si el puerto 8080 está ocupado, detener la otra aplicación o agregar
 `server.port=8081` a `config/application-local.properties` y consultar el nuevo puerto.
 Si aparece `make: command not found`, instalar GNU Make y revisar el PATH.
 Si aparece `java: command not found`, revisar la instalación del JDK y el PATH.
-Las tablas del dominio se agregarán cuando se implementen las funcionalidades.
+Flyway creates the `users`, `publications` and `photos` tables using `V1__init.sql`.
 
 ### Criterios de diseño
 
@@ -211,9 +211,15 @@ implementen funcionalidades, separar dominio, casos de uso, persistencia y API.
 JPA permite incorporar repositorios e inyección de dependencias; los patrones del
 dominio se elegirán según las reglas de negocio del TP.
 
-Hibernate valida el esquema (`ddl-auto=validate`). Por ahora no se crean tablas
-del dominio automáticamente; la gestión del esquema se definirá al implementar
-las primeras entidades.
+Hibernate validates the schema (`ddl-auto=validate`) and Flyway manages its creation.
+The initial migration uses English names and UUID identifiers.
+`situation` distinguishes `LOST` and `FOUND`; `stage` distinguishes `ACTIVE`, `CLOSED`
+and `CANCELLED`. Dates use `TIMESTAMP WITH TIME ZONE` to represent domain `Instant`
+values. Photo references and their order are stored in `photos`.
+
+This V1 targets a clean development database. If the previous version was applied,
+use another database or recreate the development schema before running it.
+No compatibility migrations are included.
 
 ## Funcionalidades principales
 
