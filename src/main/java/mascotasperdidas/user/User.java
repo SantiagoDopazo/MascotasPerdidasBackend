@@ -2,33 +2,31 @@ package mascotasperdidas.user;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import jakarta.persistence.Convert;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.util.Locale;
-import java.util.UUID;
 
 @Entity
-@Table(name = "users")
+@Table(name = "usuario")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @Column(nullable = false, length = 100)
+    @Column(name = "username", nullable = false, unique = true, length = 50)
     private String name;
 
-    @Column(nullable = false, unique = true, length = 254)
+    @Column(nullable = false, unique = true, length = 150)
     private String email;
 
-    @Column(name = "password_hash", nullable = false, length = 255)
+    @Column(name = "password", nullable = false, length = 255)
     private String passwordHash;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 20)
+    @Convert(converter = UserRoleConverter.class)
+    @Column(name = "rol", nullable = false, length = 20)
     private UserRole role = UserRole.USER;
 
     protected User() {
@@ -40,7 +38,7 @@ public class User {
         this.passwordHash = passwordHash;
     }
 
-    public UUID getId() {
+    public Long getId() {
         return id;
     }
 

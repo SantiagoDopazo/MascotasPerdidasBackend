@@ -29,7 +29,7 @@ class UserRepositoryTest {
     void savesAndReloadsUserFromPostgres() {
         String email = newEmail();
         User saved = users.saveAndFlush(new User("Santiago", email, PASSWORD_HASH));
-        UUID id = saved.getId();
+        Long id = saved.getId();
         assertThat(id).isNotNull();
 
         // Vaciar el contexto para verificar la lectura real, no el objeto en memoria.

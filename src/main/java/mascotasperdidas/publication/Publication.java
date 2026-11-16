@@ -6,11 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.UUID;
 import mascotasperdidas.user.User;
 
 public class Publication {
-    private final UUID id;
+    private Long id;
     private final User author;
     private final PublicationType type;
     private final Instant createdAt;
@@ -33,7 +32,6 @@ public class Publication {
     Publication(User author, PublicationType type, String title, String description,
             PetCharacteristics characteristics, Location location,
             Instant occurredAt, List<Photo> photos, Clock clock) {
-        this.id = UUID.randomUUID();
         this.author = Objects.requireNonNull(author, "publication.author.required");
         this.type = Objects.requireNonNull(type, "publication.type.required");
         this.clock = Objects.requireNonNull(clock, "publication.clock.required");
@@ -104,7 +102,7 @@ public class Publication {
         return description.strip();
     }
 
-    public UUID getId() { return id; }
+    public Long getId() { return id; }
     public User getAuthor() { return author; }
     public PublicationType getType() { return type; }
     public String getTitle() { return title; }
