@@ -1,11 +1,24 @@
 package mascotasperdidas.publication;
 
-public interface PublicationState {
-    void validateEditing();
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
+import org.hibernate.annotations.DiscriminatorFormula;
 
-    PublicationState close();
+@Embeddable
+@DiscriminatorFormula("etapa")
+public abstract class PublicationState {
+    @Column(name = "etapa", nullable = false, length = 20)
+    private String code;
 
-    PublicationState cancel();
+    protected PublicationState(String code) {
+        this.code = code;
+    }
 
-    boolean isVisible();
+    public abstract void validateEditing();
+
+    public abstract PublicationState close();
+
+    public abstract PublicationState cancel();
+
+    public abstract boolean isVisible();
 }

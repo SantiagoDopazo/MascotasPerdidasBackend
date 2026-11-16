@@ -1,6 +1,15 @@
 package mascotasperdidas.publication;
 
-public final class ClosedPublication implements PublicationState {
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Embeddable;
+
+@Embeddable
+@DiscriminatorValue("CLOSED")
+public final class ClosedPublication extends PublicationState {
+    public ClosedPublication() {
+        super("CLOSED");
+    }
+
     @Override
     public void validateEditing() {
         throw new IllegalStateException("publication.closed.edit");

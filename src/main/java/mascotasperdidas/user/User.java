@@ -2,7 +2,8 @@ package mascotasperdidas.user;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Convert;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -25,7 +26,7 @@ public class User {
     @Column(name = "password", nullable = false, length = 255)
     private String passwordHash;
 
-    @Convert(converter = UserRoleConverter.class)
+    @Enumerated(EnumType.STRING)
     @Column(name = "rol", nullable = false, length = 20)
     private UserRole role = UserRole.USER;
 
