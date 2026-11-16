@@ -19,17 +19,18 @@ public class Publication {
     private PetCharacteristics characteristics;
     private Location location;
     private Instant occurredAt;
+    private String title;
     private String description;
     private PublicationState state = new ActivePublication();
     private Instant deactivatedAt;
 
-    public Publication(User author, PublicationType type, String description,
+    public Publication(User author, PublicationType type, String title, String description,
             PetCharacteristics characteristics, Location location,
             Instant occurredAt, List<Photo> photos) {
-        this(author, type, description, characteristics, location, occurredAt, photos, Clock.systemUTC());
+        this(author, type, title, description, characteristics, location, occurredAt, photos, Clock.systemUTC());
     }
 
-    Publication(User author, PublicationType type, String description,
+    Publication(User author, PublicationType type, String title, String description,
             PetCharacteristics characteristics, Location location,
             Instant occurredAt, List<Photo> photos, Clock clock) {
         this.id = UUID.randomUUID();
@@ -37,6 +38,7 @@ public class Publication {
         this.type = Objects.requireNonNull(type, "publication.type.required");
         this.clock = Objects.requireNonNull(clock, "publication.clock.required");
         this.createdAt = clock.instant();
+        this.title = title;
         this.description = validateDescription(description);
         this.characteristics = Objects.requireNonNull(characteristics, "publication.characteristics.required");
         this.location = Objects.requireNonNull(location, "publication.location.required");
@@ -47,13 +49,14 @@ public class Publication {
         }
     }
 
-    public void updateInformation(String description, PetCharacteristics characteristics,
+    public void updateInformation(String title, String description, PetCharacteristics characteristics,
             Location location, Instant occurredAt) {
         state.validateEditing();
         String newDescription = validateDescription(description);
         Objects.requireNonNull(characteristics, "publication.characteristics.required");
         Objects.requireNonNull(location, "publication.location.required");
         Objects.requireNonNull(occurredAt, "publication.occurrence.required");
+        this.title = title;
         this.description = newDescription;
         this.characteristics = characteristics;
         this.location = location;
@@ -104,6 +107,7 @@ public class Publication {
     public UUID getId() { return id; }
     public User getAuthor() { return author; }
     public PublicationType getType() { return type; }
+    public String getTitle() { return title; }
     public String getDescription() { return description; }
     public PetCharacteristics getCharacteristics() { return characteristics; }
     public Location getLocation() { return location; }
