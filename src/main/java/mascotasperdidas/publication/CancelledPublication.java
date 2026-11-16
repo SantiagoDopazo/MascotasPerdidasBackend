@@ -1,6 +1,6 @@
 package mascotasperdidas.publication;
 
-public final class CancelledPublication implements PublicationState {
+public record CancelledPublication() implements PublicationState {
     @Override
     public void validateEditing() {
         throw new IllegalStateException("publication.cancelled.edit");

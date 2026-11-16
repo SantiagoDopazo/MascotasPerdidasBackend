@@ -1,6 +1,13 @@
 package mascotasperdidas.publication;
 
-public record Location(double latitude, double longitude, String description) {
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
+
+@Embeddable
+public record Location(
+        @Column(nullable = false) double latitude,
+        @Column(nullable = false) double longitude,
+        @Column(name = "zona", length = 150) String description) {
     public Location {
         if (!Double.isFinite(latitude) || latitude < -90 || latitude > 90) {
             throw new IllegalArgumentException("location.latitude.range");

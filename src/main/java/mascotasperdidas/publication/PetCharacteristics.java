@@ -1,9 +1,20 @@
 package mascotasperdidas.publication;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import java.util.Objects;
 
+@Embeddable
 public record PetCharacteristics(
-        Species species, PetSize size, String colors, String distinctiveMarks) {
+        @Convert(converter = SpeciesConverter.class)
+        @Column(name = "tipo_animal", nullable = false, length = 20) Species species,
+        @Enumerated(EnumType.STRING)
+        @Column(nullable = false, length = 20) PetSize size,
+        @Column(nullable = false, columnDefinition = "text") String colors,
+        @Column(name = "distinctive_marks", columnDefinition = "text") String distinctiveMarks) {
 
     public PetCharacteristics {
         Objects.requireNonNull(species, "pet.species.required");

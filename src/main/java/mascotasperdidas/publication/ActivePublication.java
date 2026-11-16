@@ -1,6 +1,6 @@
 package mascotasperdidas.publication;
 
-public final class ActivePublication implements PublicationState {
+public record ActivePublication() implements PublicationState {
     @Override
     public void validateEditing() {
     }

@@ -1,5 +1,20 @@
 package mascotasperdidas.publication;
 
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OrderColumn;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import java.time.Clock;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -8,20 +23,56 @@ import java.util.Objects;
 import java.util.Optional;
 import mascotasperdidas.user.User;
 
+@Entity
+@Table(name = "publicacion")
 public class Publication {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private final User author;
-    private final PublicationType type;
-    private final Instant createdAt;
-    private final Clock clock;
-    private final List<Photo> photos;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "usuario_id", nullable = false, updatable = false)
+    private User author;
+
+    @Convert(converter = PublicationTypeConverter.class)
+    @Column(name = "situacion", nullable = false, length = 20, updatable = false)
+    private PublicationType type;
+
+    @Column(name = "fecha_creacion", nullable = false, updatable = false)
+    private Instant createdAt;
+
+    @Transient
+    private Clock clock = Clock.systemUTC();
+
+    @ElementCollection
+    @CollectionTable(name = "foto", joinColumns = @JoinColumn(name = "publicacion_id", nullable = false))
+    @OrderColumn(name = "position")
+    private List<Photo> photos = new ArrayList<>();
+
+    @Embedded
     private PetCharacteristics characteristics;
+
+    @Embedded
     private Location location;
+
+    @Column(name = "fecha", nullable = false)
     private Instant occurredAt;
+
+    @Column(name = "titulo", nullable = false, length = 150)
     private String title;
+
+    @Column(name = "descripcion", nullable = false, columnDefinition = "text")
     private String description;
+
+    @Convert(converter = PublicationStateConverter.class)
+    @Column(name = "etapa", nullable = false, length = 20)
     private PublicationState state = new ActivePublication();
+
+    @Column(name = "deactivated_at")
     private Instant deactivatedAt;
+
+    protected Publication() {
+    }
 
     public Publication(User author, PublicationType type, String title, String description,
             PetCharacteristics characteristics, Location location,
