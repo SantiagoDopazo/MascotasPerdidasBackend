@@ -1,6 +1,15 @@
 package mascotasperdidas.publication;
 
-public record CancelledPublication() implements PublicationState {
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Embeddable;
+
+@Embeddable
+@DiscriminatorValue("CANCELLED")
+public final class CancelledPublication extends PublicationState {
+    public CancelledPublication() {
+        super("CANCELLED");
+    }
+
     @Override
     public void validateEditing() {
         throw new IllegalStateException("publication.cancelled.edit");

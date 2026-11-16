@@ -1,6 +1,15 @@
 package mascotasperdidas.publication;
 
-public record ActivePublication() implements PublicationState {
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Embeddable;
+
+@Embeddable
+@DiscriminatorValue("ACTIVE")
+public final class ActivePublication extends PublicationState {
+    public ActivePublication() {
+        super("ACTIVE");
+    }
+
     @Override
     public void validateEditing() {
     }

@@ -2,10 +2,11 @@ package mascotasperdidas.publication;
 
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -34,7 +35,7 @@ public class Publication {
     @JoinColumn(name = "usuario_id", nullable = false, updatable = false)
     private User author;
 
-    @Convert(converter = PublicationTypeConverter.class)
+    @Enumerated(EnumType.STRING)
     @Column(name = "situacion", nullable = false, length = 20, updatable = false)
     private PublicationType type;
 
@@ -64,8 +65,7 @@ public class Publication {
     @Column(name = "descripcion", nullable = false, columnDefinition = "text")
     private String description;
 
-    @Convert(converter = PublicationStateConverter.class)
-    @Column(name = "etapa", nullable = false, length = 20)
+    @Embedded
     private PublicationState state = new ActivePublication();
 
     @Column(name = "deactivated_at")

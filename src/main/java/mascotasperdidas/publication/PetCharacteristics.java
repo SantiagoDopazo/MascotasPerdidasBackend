@@ -1,7 +1,6 @@
 package mascotasperdidas.publication;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -9,7 +8,7 @@ import java.util.Objects;
 
 @Embeddable
 public record PetCharacteristics(
-        @Convert(converter = SpeciesConverter.class)
+        @Enumerated(EnumType.STRING)
         @Column(name = "tipo_animal", nullable = false, length = 20) Species species,
         @Enumerated(EnumType.STRING)
         @Column(nullable = false, length = 20) PetSize size,
