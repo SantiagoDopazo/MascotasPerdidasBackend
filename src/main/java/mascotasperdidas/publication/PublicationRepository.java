@@ -12,4 +12,6 @@ public interface PublicationRepository extends JpaRepository<Publication, Long> 
     default Page<Publication> findActive(Pageable pageable) {
         return findByStateType(ActivePublication.class, pageable);
     }
+    Page<Publication> findByAuthorIdOrderByCreatedAtDescIdDesc(Long authorId, Pageable pageable);
+
 }
